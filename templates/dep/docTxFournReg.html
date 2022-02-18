@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title> Suivi Dep </title>
+    </head>
+    <body>
+<h5> navigation </h5>
+
+<p> <a href='{% url "dep:depDoc_url"%}'> Retour Menu Documentation</a>
+ &emsp; <a href='{% url "dep:dep_url"%}'> Retour Menu Dep</a> </p>
+<p> ---- </p>
+<p> Version 1 de l'application </p>
+<h3> Saisie d'une transaction chez un fournisseur régulier </h3>
+<p> le fournisseur régulier fournissant ou pas des données habituelles </p>
+<p> les fournisseurs sur abonnement ne figurent pas dans la liste des fournisseurs proposés :
+pour eux, une seule tx à l'abonnement. Passer par liste de tous les fournisseurs pour pourvoir agir sur leur tx  </p>
+
+<p> <b>Transaction unitaire mono catégorie (type voie verte)</b></p>
+<ul>
+<li> à la la saisie, indiquer 'solo' </li>
+<li> répercution : un mouvmt courant avec le moyen de paiemt habituel, à modifier si exception</li>
+<li> répercution : une ligne d'achat avec la catégorie habituelle </li>
+</ul>
+<p><b>  Transaction unitaire mono catégorie habituelle avec par exception, des articles inhabituels (type voie verte + coloquinte)</b></p>
+<ul>
+<li> à la saisie, ne pas indiquer 'solo' </li>
+<li> mofifier la tx créée en complétant son intitulé habituel '+ article inhabituels' </li>
+<li> répercussion mouvmt courant avec le moyen de paiemt habituels, à modifier si exception </li>
+<li> saisie manuelle d'une ligne d'achat par catégorie pour les articles inhabituels hors catégorie de base </li>
+<li> lancement 'solde' pour le reste des articles </li>
+    <ul>
+        <li>répercussion : une ligne d'achat avec la catégorie habituelle, proposée à la modification pour exeption exception </li>
+    </ul>
+</ul>
+<p> <b>Transaction unitaire multicatégories avec une catégorie de base  (type carrefour drive)</b></p>
+<ul>
+<li> à la saisie, ne pas indiquer 'solo' </li>
+<li> pas besoin de modifier l'intitulé habituel de la tx créée, il est de base multi catégories  </li>
+<li> répercussion mouvmt courant avec le moyens de paiemt habituel, à modifier si exception </li>
+<li> saisie manuelle d'une ligne d'achat par catégorie pour les articles qui ne sont pas de la catégorie de base </li>
+<li> lancement 'solde' pour le reste des articles de base, répercussion : une ligne d'achat de base  </li>
+</ul>
+
+<p> <b>Transaction à livraison  mono ou multi catégorie(s) sans versement initial (type amazon) </b></p>
+<ul>
+<li> saisie de l'ensemble des champs tx sauf fournisseur déjà sélectionné  </li>
+<li> répercution : un mouvmt engagé de type L (attente de livraison) avec les moyens de paiemt habituels du fournisseur, à modifier si ce n'est pas le cas</li>
+<li> Pour une livraison partielle : </li>
+    <ul>
+        <li> saisie d'un mvmt courant pour la tx du montant de la liv </li>
+        <li> répercussion : màj de l'engagé de la tx avec annulation si solde à 0</li>
+        <li> saisie des lignes d'achat de la livraison avec leur montant et leur catégorie </li>
+    </ul>
+<li> Pour une livraison finale : </li>
+    <ul>
+        <li> action solde des mvmts courants pour la tx </li>
+        <li> répercussion : fin de l'engagé pour cette tx </li>
+        <li> saisie des lignes d'achat de la livraison avec leur montant et leur catégorie </li>
+    </ul>
+</ul>
+<p> <b>Transaction à livraison  mono ou multi catégorie(s) avec versement initial type résa + solde </b></p>
+<ul>
+<li> saisie de l'ensemble des champs tx sauf fournisseur déjà sélectionné </li>
+<li> répercussion : un mouvmt courant du versemt initial, moyen de paiemt habituel du fournisseur à modifier si pas le cas </li>
+<li> répercution : un mouvmt engagé du résidu de type L (attente de livraison) avec les moyens de paiemt habituel du fournisseur , à modifier si ce n'est pas le cas</li>
+        <ul><li>   son montant est calculé automatiqmt montant tx - versmt initial </li></ul>
+<li> Pour une livraison partielle : </li>
+    <ul>
+        <li> saisie d'un mvmt courant pour la tx du montant de la liv </li>
+        <li> répercussion : màj de l'engagé de la tx avec annulation si solde à 0</li>
+        <li> saisie des lignes d'achat de la livraison avec leur montant et leur catégorie </li>
+    </ul>
+<li> Pour une livraison finale : </li>
+    <ul>
+        <li> action solde des mvmts courants pour la tx </li>
+        <li> répercussion : fin de l'engagé pour cette tx </li>
+        <li> saisie des lignes d'achat de la livraison avec leur montant et leur catégorie </li>
+    </ul>
+</ul>
+
+<p> <b> transaction abmt  avec renouvellement automatique (type wsj)  </b> </p>
+<ul>
+<li> Saisie de la tx avec montant et versmt initial si frais d'établissement de l'abonnement </li>
+    <ul>
+        <li> répercussion : le versmt initial est répercuté en mouvmt courant s'il n'est pas nul </li>
+        <li> répercussion : le solde est repercuté en engagmt auquel if faut fournir les données de périodicité par modification</li>
+    </ul>
+
+<li> Conversion des abmts par l'opération "nouvelle période"  </li>
+       <ul><li> répercussion : mouvement et ligne d'achat  à la date du renouvellement auto</li>
+            <li> ces mouvements n'apparaîtont en rapprochement qu'à leur date d'échéance </li></ul>
+
+<li>  opération de changement du montant de l'abonnement </li>
+    <ul>
+    <li> Si notification par le fournisseur avant la conversion nouvelle période :</li>
+        <ul>
+        <li> mise à jour du montant de la transaction d'abonnement </li>
+        <li> répercussion : mise à jour du montant annoncé de l'engagement de la tx d'abonnement </li>
+        </ul>
+    <li> Si la notification par le fournisseur après la conversion nouvelle période : </li>
+        <ul>
+        <li> mise à jour du montant de la transaction d'abonnement </li>
+        <li> répercussion : mise à jour du montant annoncé de l'engagement de la tx d'abonnement </li>
+        <li> mise à jour du montant mouvement de la tx d'abonnement </li>
+        <li> mise à jour du montant ligne d'achat de la tx d'abonnement </li>
+        </ul>
+    </ul>
+</ul>
+
+<p> <b> transaction abmt avec renouvellement manuel en fin de période (type ign rando, média cité)  </b> </p>
+<p> on les classe en abnmt avec un engagement à fin prévisionnel </p>
+<ul>
+<li> Saisie de la tx avec montant et versmt initial si frais d'établissement de l'abonnement </li>
+
+    <ul>
+        <li> attention : le montant correspond à l'abonnement; il se cumule avec le versmt initial  ! différent de tx à livraison </li>
+        <li> répercussion : le versmt initial est répercuté en mouvmt courant s'il n'est pas nul  </li>
+        <li> répercussion : le montant tx est répercuté en mouvmt courant  </li>
+        <li> répercussion : un engagmt auquel if faut fournir les données de périodicité par modification;
+        cet engagement n'est pas converti par l'opération nouvelle période</li>
+    </ul>
+
+
+<li>  opération de renouvellement manuelle </li>
+    <ul>
+    <li> Si renouvellement, suite à la transaction réelle effectuée :   </li>
+        <ul>
+        <li> conversion manuelle de l'engagement de la tx d'abonnement </li>
+        <li> répercussion : mouvmt courant et ligne d'achat à la date de la conversion; à modifier si postérieure au réel  </li>
+        </ul>
+    <li> Si non renouvellement : </li>
+        <ul>
+        <li> suppression de l'engagement de la tx d'abonnement </li>
+        <li> la tx et les lignes d'achat passées sont conservées </li>
+        </ul>
+    </ul>
+
+<li>  opération de changement du montant de l'abonnement </li>
+    <ul>
+    <li> Si notification par le fournisseur avant la conversion nouvelle période : </li>
+        <ul>
+        <li> mise à jour du montant de la transaction d'abonnement </li>
+        <li> répercussion : mise à jour du montant annoncé de l'engagement de la tx d'abonnement </li>
+        </ul>
+    <li> Si la notification par le fournisseur après la conversion nouvelle période : </li>
+        <ul>
+        <li> mise à jour du montant de la transaction d'abonnement </li>
+        <li> répercussion : mise à jour du montant annoncé de l'engagement de la tx d'abonnement </li>
+        <li> mise à jour du montant mouvement de la tx d'abonnement </li>
+        <li> mise à jour du montant ligne d'achat de la tx d'abonnement </li>
+        </ul>
+    </ul>
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </body>
+</html>

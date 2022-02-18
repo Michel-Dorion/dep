@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title> Suivi Dep </title>
+    </head>
+    <body>
+<h5> navigation </h5>
+<p> <a href='{% url "dep:depDoc_url"%}'> Retour Menu Documentation</a>
+    &emsp; <a href='{% url "dep:dep_url"%}'> Retour Menu Dep</a> </p>
+<p> ---- </p>
+<p> Version 1 de l'application </p>
+<h3> Modification d'une transaction </h3>
+
+<p> une modification peut être nécessaire dans plusieurs cas : </p>
+<ul><li> suite à une erreur de saisie</li>
+<li>suite à un retour </li>
+<li> suite à une non livraison </li></ul>
+
+<p> <b> Modification d'une transaction suite à une erreur de saisie </b></p>
+<ul><li> l'erreur de saisie peut concerner la nature de la transaction (par exemple UNIT au lieu de LIV )</li>
+    <ul> <li> dans ce cas, supprimer la tx (qui supprimera automatiqmt les répercussions) et la resaisir</li> </ul>
+</ul>
+<ul><li> l'erreur de saisie peut concerner le montant de la transaction </li>
+    <ul>
+      <li> il arrivera souvent que l'erreur soit découverte lors du rapprochement bancaire </li>
+     <li>  il peut être intéréssant de conserver la transaction et ses répercussions et de faire les modifications qui conviennent</li>
+        <ul><li> pour une transaction UNIT mono catégorie : sur son mouvmt courant et sur sa ligne d'articles automatiquement </li>
+            <li> pour une transaction UNIT multi catégories : sur le mouvmt courant automatiquement et sur la/les lignes d'articles concernées manuellement </li>
+            <li> pour une transaction LIV l'erreur de saisie peut porter sur le montant total ou sur le versmt initial
+                        ou sur le montant d'une livraison</li>
+                <ul> <li> erreur de saisie sur le montant total</li>
+                    <ul><li> répercussion automatique sur l'engagé s'il n'y a pas eu livraison totale </li>
+                        <li> s'il y a eu livraison totale, répercussion sur le mouvmt courant </li></ul>
+                    <li> erreur de saisie sur le montant du versmt initial</li>
+                        <ul><li> répercussion sur le mouvmt courant </li></ul>
+                    <li> erreur de saisie sur le montant d'une livraison </li>
+                        <ul><li> modification du mouvmt courant et des lignes articles  associés </li></ul>
+                </ul>
+
+        </ul>
+    </ul>
+</ul>
+<p> <b> Modification changmt du montant d'une transaction ABMT  </b></p>
+<p> le changement est annoncé par le fournisseur </p>
+<ul>
+    <li> quand ce changement est pris en compte avant la conversion périodique de l'engagement associé </li>
+        <ul> <li> modifier le montant de la transaction d'abonnement </li>
+            <li> répercussion : modification automatique du montant annoncé de l'engagement associé </li>
+        </ul>
+    <li> quand ce changement est pris en compte après la conversion périodique de l'engagement associé</li>
+        <ul> <li> supprimer le mouvmt et la ligne d'achat pour la période en cours </li>
+            <li> modifier le montant de la transaction d'abonnement </li>
+            <li> répercussion : modification du montant automatique annoncé de l'engagement associé </li>
+        </ul>
+</ul>
+
+<p> <b> Modification changmt versement intial d'une transaction ABMT  </b></p>
+<p> du à une erreur de saisie  </p>
+<ul>
+    <li> quand ce changement est pris en compte avant la première conversion de l'engagement associé </li>
+        <ul> <li> modifier le versement initial de la transaction d'abonnement </li>
+            <li> répercussion : modification automatique du montant du l'unique mouvmt associé </li>
+        </ul>
+    <li> quand ce changement n'est pris en compte qu'après la première conversion de l'engagement associé</li>
+        <ul> <li> modifier le premier mouvmt de la transaction d'abonnement manuellement </li>
+        </ul>
+</ul>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </body>
+</html>

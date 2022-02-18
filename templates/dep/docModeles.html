@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title> Suivi Dep </title>
+    </head>
+    <body>
+<h5> navigation </h5>
+<p> <a href='{% url "dep:depDoc_url"%}'> Retour Menu Documentation</a>
+    &emsp; <a href='{% url "dep:dep_url"%}'> Retour Menu Dep</a> </p>
+<p> ---- </p>
+<p> Version 1 de l'application </p>
+<h3> Modèle de données </h3>
+<h5> La table principale est celle des transactions.</h5>
+Une transaction represente un accord avec un fournisseur pour obtenir une fourniture, un service ou un bien contre un paiement
+Le rôle de la table des transaction et de lier les mouvements monétaires la concernant d'une part,
+        et les lignes d'achat correspondantes d'autre part </li>
+.
+<p> Caractéristiques d'une transaction sont sa nature et son mode de règlement </p>
+<ul> <li> Nature d'une transaction :  </li></ul>
+        <ul><li> une transaction où l'échange est immédiat (type boulangerie) est dite "Unitaire" (abrév. UNIT)</li>
+            <li> une transaction où l'on attend livraison est dite "A livraison" (abbrév LIV)</li>
+            <li> une transaction qui se renouvelle périodiquent est dite "Abonnement" (abrév ABMT))</li>
+            <li> lors d'une demande de retour au fournisseur, il y a une nouvelle transaction quand le fournisseur accepte le retour;
+                c'est un nouveau type de transaction dite "Remboursement" (abrév RBSM)</li>
+        </ul>
+    <li> Mode de de règlement :</li>
+        <ul> <li> une transaction peut être réglée "Comptant" (abrév CPT"</li>
+            <li> une transaction peut être réglée en plusieurs fois sans frais "Etalmt" (abrév ETA) </li>
+            <li> une transaction peut être réglé "Crédit" (abrév CRE) </li>
+        </ul>
+
+<p> Centraux pour une transaction sont montant, intitulé et date</p>
+<ul> <li> Le montant est toujours le montant global de la transaction quelque soit la nature et le mode de règlement de la transaction</li>
+    <li> Si la transaction n'est pas  de nature "Unitaire", il peut y avoir un versement initial</li>
+    <li> Paradoxalement, le versement initial peut être égal au montant de la transaction
+        si on a payé d'avance une commande dont on attend livraison</li>
+
+</ul>
+
+
+
+<h5> La table des fournisseurs réguliers est une table annexe, sans lien avec la table des transactions</h5>
+Un <b>fournisseur régulier </b> est un fournisseur avec lequel on effectue régulièrment des transaction de mmême nature.
+<ul> <li> Central à un fournisseur régulier est son nom. Losqu'on saisit une nouvelle transaction avec un fournisseur régulier,
+    on le sélectionne dans la liste des fournisseurs réguliers
+    et <b>les information dite habituelles </b> seront fournies automatiquements </li>
+    <li> Le rôle de la table des fournisseurs réguliers est d'éviter la saisie répétitive
+    des mêmes informations à chaque transaction habituelle. </li>
+
+
+</ul>
+
+<h5> La table des mouvements est une table dépendante de la table des transactions</h5>
+<ul><li> Un <b>mouvement</b> est toujours associé à une transaction</li>
+    <li> Le rôle de la table des mouvements est de tenir les données de paiement,
+        à fin de rapprochement avec les lignes de débit/crédit des banques.</li>
+    <li> Caractéristique d'un mouvement  est le moyen de paiement utilisé : </li>
+    <li> Centraux sont le montant du paiement, son intitulé et sa date </li>
+    <li> Pour une transaction, il y a un ou plusieurs paiements</li>
+
+</ul>
+
+<h5> La table des engagements est une table dépendante de la table des transactions</h5>
+<ul> <li> Un <b>engagement</b> est toujours associé à une transaction de nature "à Livraion" ou "Abonnement"</li>
+    <li> Le rôle de la table des engagements est de tenir la liste des dépenses futures que l'on a engagées</li>
+    <li> Caractéristiques d'un engagment sont sa date due, ainsi que sa période s'il s'agit d'un abonnement </li>
+    <li> Central est le montant de l'engagement et sa nature :</li>
+            <ul><li> un engagement en attente de livraison (abrév "L") représente le montant restant à payer à la livraison</li>
+                <li> les engagements par abonnement représentent les montants qu'il faudra payer au renouvellement </li></ul>
+                <ul> <li> Les engagements des abonnements renouvelés automatiquement par prélèvment SEPA seront convertis en mouvements
+                en début de chaque période </li>
+                    <li> Les engagements des abonnements renouvelés ou pas au terme de leur période seront convertis en mouvements
+                        au moment de leur revouvellement manuel, si tel est bien le cas.
+                        Ils seront supprimés dans le cas contraire. </li>
+                </ul>
+        </ul>
+
+<h5> la table des lignes d'achat est une table dépendante de la table des transactions</h5>
+<ul><li> Une <b>ligne d'achat</b>  est toujours associée à une transaction</li>
+    <li> Le rôle de la table des lignes d'achat est de tenir les données de dépense par catégories et par date </li>
+    <li> Caractéristique d'une ligne d'achat est sa catégorisation, qui comprend : </li>
+        <ul>
+        <li> le nature de l'aquis : Fourniture, Service, Bien </li>
+        <li> le groupe de l'acquis : Fonctionnement (abrèv), Gestion (abrév), Loisir (abrév), Prod (abrév) </li>
+        <li> la catégorie dans le groupe </li>
+        </ul>
+    <li> Centraux sont le montant des achats dans cette catégorisation et l'intitulé</li>
+
+</ul>
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </body>
+</html>

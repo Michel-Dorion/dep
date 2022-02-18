@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title> Suivi Dep </title>
+    </head>
+    <body>
+    <div class="container">
+<h2> Menu principal de la gestion des dépenses </h2>
+<p class="lead"> {{msg}} </p>
+
+<ul><li> Version 1 de l'application </li>
+    <li>  <a href="/dep/doc/"> Accès à la documentation</a></li>
+    <li> Deconnexion <a href="{% url 'logout' %}?next={% url 'dep:dep_url'%}">Logout</a> </li>
+
+</ul>
+    </div>
+<ul>
+<h4> Actions de SUIVI des DEPENSES</h4>
+<li><p><a href="/dep/fournreg/">Saisie Transaction Fournisseur Régulier (hors abonnement </a></p></li>
+<li><p><a href="/dep/txen/">Saisie Transaction Fournisseur Occasionnel (hors abonnement </a></p></li>
+<li><p><a href="/dep/fournabmt/">Saisie Transaction Abonnement (fournisseur régulier abmt unqmt </a></p></li>
+<li><p><a href="/dep/fournen/">Saisie Fournisseur Régulier </a></p></li>
+<!--<li><p><a href="/dep/fournen/">Saisie Remboursement </a></p></li>-->
+<li><p><a href="/dep/rapbqe/">Rapprochement Bancaire </a></p></li>
+<li><p><a href="/dep/engaconv/">Nouvelle periode </a></p></li>
+<li><p><a href="/dep/tx/liv">Gestion de Transactions en attente : Livraison(s) ou Remboursement </a></p></li>
+<li><p><a href="/dep/tx/abmtrenouv">Gestion de Transactions Abonnement à Renouvellement automatique </a></p></li>
+<li><p><a href="/dep/tx/abmtpasrenouv">Gestion de Transactions Abonnement à Renouvellement manuel </a></p></li>
+
+
+
+<h4> Liste des Données  </h4>
+<li><p><a href="/dep/tx/">Liste de toutes les Transactions </a></p></li>
+<li><p><a href="/dep/fourn/">Liste de tous les Fournisseurs Réguliers </a></p></li>
+<li><p><a href="/dep/mvmt/">Liste de tous les Mouvements  </a></p></li>
+<li><p><a href="/dep/enga/">Liste de tous les Engagements  </a></p></li>
+<li><p><a href="/dep/achat/">Liste de toutes les lignes d'Achat </a></p></li>
+<li><p><a href="/dep/engarenouv/">Liste des Engagements par Abonnements renouvelés automatiquement </a></p></li>
+<li><p><a href="/dep/engaprev/">Liste des Enagements pour Livraisons en attente et Abmts à renouveler </a></p></li>
+
+
+<p> ---- </p>
+
+</ul>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </body>
+</html>

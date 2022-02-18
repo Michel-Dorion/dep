@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title> Suivi Dep </title>
+    </head>
+    <body>
+<h5> navigation </h5>
+<p> <a href='{% url "dep:depDoc_url"%}'> Retour Menu Documentation</a>
+    &emsp; <a href='{% url "dep:dep_url"%}'> Retour Menu Dep</a> </p>
+<p> ---- </p>
+<p> Version 1 de l'application </p>
+<h3> Modèle de données </h3>
+<h5> Listes des entités </h5>
+
+<ul> <li> Liste des transactions  </li>
+        <ul> <li> La liste des transactions est affichée par dates décroissantes, les plus récentes en tête</li>
+            <li> il ne faut pas être surpris de ne pas trouver les transactions de nature "Abonnement" en tête de liste,
+                    car elles datent de la décision d'abonnement</li>
+
+        </ul>
+    <li> Liste des mouvements </li>
+        <ul> <li> la liste des mouvements est affichée par dates décroissantes, les plus récentes en tête </li>
+            <li> il ne faut pas être surpris de trouver des mouvements de date future par rapport à la date du jour;
+                il s'agit des mouvements liés aux engagements d'abonnement renouvellés automatiquement pour le période en cours </li>
+
+        </ul>
+
+<ul> <li> Liste des fournisseurs réguliers </li>
+    <li> Si la transaction n'est pas  de nature "Unitaire", il peut y avoir un versement initial</li>
+    <li> Paradoxalement, le versement initial peut être égal au montant de la transaction
+        si on a payé d'avance une commande dont on attend livraison</li>
+
+</ul>
+
+
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </body>
+</html>

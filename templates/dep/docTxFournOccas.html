@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title> Suivi Dep </title>
+    </head>
+    <body>
+<h5> navigation </h5>
+<p> <a href='{% url "dep:depDoc_url"%}'> Retour Menu Documentation</a>
+    &emsp; <a href='{% url "dep:dep_url"%}'> Retour Menu Dep</a> </p>
+<p> ---- </p>
+<p> Version 1 de l'application </p>
+<h3> Saisie d'une transaction chez un fournisseur occasionnel </h3>
+
+<p> <b>Transaction unitaire mono catégorie </b></p>
+<ul>
+<li> la saisie, comprend le nom du fournisseur et l'ensenble des autres champs tx  </li>
+<li> répercution : un mouvmt courant avec les moyens de paiemt par défaut, à modifier si ce n'est pas le cas</li>
+<li> répercution : une ligne d'achat avec l'intitulé de la tx et la catégorisation par défaut, à modifier si ce n'est pas le cas</li>
+</ul
+<p> <b>Transaction unitaire multi catégories </b></p>
+<ul>
+<li> la saisie, comprend le nom du fournisseur et l'ensenble des autres champs tx  </li>
+<li> répercution : un mouvmt courant avec les moyens de paiemt par défaut, à modifier si ce n'est pas le cas</li>
+<li> saisie manuelle des lignes d'achat </li>
+<li> pour la dernière ligne d'achat, solde lance la modification d'une ligne créée avec le calcul du montant restant </li>
+        <ul> <li> modifier l'intitulé et la catégorisation par défaut si nécessaire </li></ul>
+</ul>
+
+<p> <b>Transaction à livraison  mono ou multi catégorie(s) sans versement initial </b></p>
+<ul>
+<li> la saisie, comprend le nom du fournisseur et l'ensemble des autres champs tx </li>
+<li> répercution : un mouvmt engagé de type L (attente de livraison) avec les moyens de paiemt par défaut, à modifier si ce n'est pas le cas</li>
+<li> Pour une livraison partielle ou totale </li>
+    <ul>
+        <li> saisie mvmt courant pour la tx du montant de la liv </li>
+        <li> répercussion : màj de l'engagé de la tx avec annulation si solde à 0</li>
+        <li> saisie des lignes d'achat de la livraison avec leur montant et leur catégorie </li>
+    </ul>
+</ul>
+<p> <b>Transaction à livraison  mono ou multi catégorie(s) avec versement initial </b></p>
+<ul>
+<li> la saisie, comprend le nom du fournisseur et l'ensemble des autres champs tx </li>
+<li> répercussion : un mouvmt courant du versemt initial, moyen de paiemt par defaut à modifier si pas le cas </li>
+<li> répercution : un mouvmt engagé du résidu de type L (attente de livraison) avec les moyens de paiemt par défaut, à modifier si ce n'est pas le cas</li>
+        <ul><li>   son montant est calculé automatiqmt montant tx - versmt initial </li></ul>
+<li> Pour une livraison partielle </li>
+    <ul>
+        <li> saisie d'un mvmt courant pour la tx du montant de la liv </li>
+        <li> répercussion : màj de l'engagé de la tx avec annulation si solde à 0</li>
+        <li> saisie des lignes d'achat de la livraison avec leur montant et leur catégorie </li>
+    </ul>
+<li> Pour une livraison finale </li>
+    <ul>
+        <li> action solde des mvmts courants pour la tx </li>
+        <li> répercussion : fin de l'engagé pour cette tx </li>
+        <li> saisie des lignes d'achat de la livraison avec leur montant et leur catégorie </li>
+    </ul>
+</ul>
+
+<p> <b>Transaction d'abonnement </b></p>
+<li> par convention toute transaction d'abonnement doit provenir d'un fournisseur régulier </li>
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </body>
+</html>

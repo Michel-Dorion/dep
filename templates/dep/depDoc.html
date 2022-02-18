@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title> Suivi Dep </title>
+    </head>
+    <body>
+<p> <a href='{% url "dep:dep_url"%}'> Retour Menu Dep</a> </p>
+<p> ---- </p>
+<p> Version 1 de l'application </p>
+<h3> Introduction à l'application dep </h3>
+    <ul>
+        <li> <a href='{% url "dep:docPresgen_url"%}'> Présentation générale </a> </li>
+        <li> <a href='{% url "dep:docCasdusage_url"%}'> Cas d'usage </a> </li>
+        <li> <a href='{% url "dep:docModeles_url"%}'> Concepts du modèle de données</a></li>
+    </ul>
+
+
+<h3> Gestion des transactions </h3>
+
+<ul>
+<li> <p> <a href='{% url "dep:docTxFournOccas_url"%}'> Saisie d'une transaction chez un fournisseur occasionnel </a> </p> </li>
+<li> <p> <a href='{% url "dep:docTxFournReg_url"%}'> Saisie d'une transaction chez un fournisseur régulier </a> </p> </li>
+<li> <p> <a href='{% url "dep:docModifTx_url"%}'> Modification d'une transaction enregistrée  </a> </p> </li>
+<li> <p> <a href='{% url "dep:docRembsmt_url"%}'> Gestion des remboursements  </a> </p> </li>
+
+<li> Rapprochement bancaire
+<p> Pour faciliter l'opération, ne sont présentés que les mouvements courants non encore rapprochés
+    dont la date ne dépasse pas celle du jour où l'on opère.
+     Ainsi les mouvements issus de la conversion d'engagements en nouvelle période qui sont plus tardifs n'apparaissent pas </p>
+</li>
+<li>Jeux de test</li>
+    <ul><li>Pour la saisie de transaction : </li>
+        <ul><li> fournisseur régulier : unitaire mono ou multi, à livraison avec ou sans versement initial, abonnement </li>
+            <li> fournisseur ocassionnel  : unitaire mono ou multi, à livraison avec ou sans versement initial </li>
+            <li> fournisseur occasionnel, tx abonnement non prises en compte </li>
+        </ul>
+    </ul>
+
+<li> Changements en versions ultérieures</li>
+    <ul>
+    <li> solde du compte à date du jour et en fin de période </li>
+    <li> amélioration de la gestion des remboursements </li>
+    </ul>
+
+</ul>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </body>
+</html>

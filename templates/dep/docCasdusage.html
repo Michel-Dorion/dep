@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title> Suivi Dep </title>
+    </head>
+    <body>
+<h5> navigation </h5>
+<p> <a href='{% url "dep:depDoc_url"%}'> Retour Menu Documentation</a>
+    &emsp; <a href='{% url "dep:dep_url"%}'> Retour Menu Dep</a> </p>
+<p> ---- </p>
+<p> Version 1 de l'application </p>
+<h3> Cas d'usage  </h3>
+<h5> Traitement d'un abnmt épisodique (type Bip & Go) </h5>
+<p> fait le choix d'éviter une tx à chaque période d'usage
+    et de créer une tx abnmt sans renouvellement automatique avec un montant initial 0. </p>
+<ul><li> A chaque notification d'une facture par le fournisseur :  </li>
+    <ul><li> modification du montant de la tx </li>
+            <ul>
+            <li> répercussion : modification automatique du montant de l'engagement associé à la tx </li>
+            </ul>
+        <li> conversion manuelle de l'engagement modifié </li>
+            <ul>
+            <li> répercussion : création automatique d'un mouvmt courant et d'une ligne achat </li>
+            </ul>
+
+    </ul>
+</ul>
+
+
+<h5> Traitement d'une transaction prépayée en attente de livraison  (type Tricothe) </h5>
+<ul>
+    <li> saisie de la transaction de nature LIV avec versement initial égal au montant de la transaction  </li>
+        <ul>
+        <li> répercussion : un mouvmt de montant versement intial  </li>
+        <li> répercussion : un engagment de montant annoncé à 0 </li>
+        </ul>
+
+    <li> A la livraison : </li>
+        <ul>
+        <li>suppression manuel de l'engagment de montant annoncé à 0 </li>
+        <li> solde achat de la transaction </li>
+        </ul>
+
+</ul>
+
+
+<h5> Traitement d'une transaction LIV avec facturation à la livraison   (type Amazon) </h5>
+<ul>
+    <li> saisie de la transaction de nature LIV mono ou multi catégorie(s) sans versement initial   </li>
+    <ul>
+        <li> répercussion : un engagment de montant annoncé égal à celui de la transaction </li>
+    </ul>
+
+    <li> A la livraison partielle ou totale conforme : </li>
+            <ul>
+            <li> création manuelle d'un mouvmt du montant de la livraison </li>
+            <li> répercussion : le montant de engagment est diminué du montant de la livraison.
+                Si le montant tombe à 0 l'engagement est supprimé </li>
+            <li> création manuelle de lignes d'achat par catégorie pour les articles reçus </li>
+            </ul>
+    <li> A la livraison partielle ou totale avec retour d'aticles : </li>
+            <ul>
+            <li> création manuelle d'un mouvmt du montant de la livraison (aticles retournés compris car facturés à rapprocher )</li>
+            <li> répercussion : le montant de l'engagment est diminué du montant de la livraison.
+                Si le montant tombe à 0 l'engagement est supprimé </li>
+
+            <li> création manuelle de lignes d'achat par catégorie pour les articles reçus conformes </li>
+
+            <li> Optionnel en V1, pour le suivi de la demande de remboursement :
+                <ul> <li> création manuelle d'une transaction  de remboursmt du montant (négatif) de nature "Remboursement" </li>
+                    des articles retournés avec versement initial égal au montant transaction </li>
+
+                    <li> Apparaîtra ainsi dans a liste des tx en attente, de remboursement </li>
+                </ul>
+
+            <li> A l'annonce du remboursement par le fournisseur :  </li>
+                <ul>
+                <li> creation manuelle d'une ligne d'achat de catégorie service gestion finances pour les frais de retour</li>
+                <li> modification du montant de la tx diminué du remboursement </li>
+                <li> creation manuelle d'un mouvmt négatif représentant le remboursement pour rapprochement </li>
+                <li> Si l'otion en a été prise, suppression de la tx de remboursement  </li>
+                    <ul><li> ! attention en V1 : pas de lien entre la tx initiale et la tx de remboursement,
+                    il faut trouver dans la liste des tx</li></ul>
+                </ul>
+            </ul>
+
+    <li> A l'annulation de certains articles par le fournisseur  qui ne seront donc pas facturés  </li>
+
+            <ul>
+            <li> modification du montant de la transaction reduit du prix des arcticles annulés  </li>
+            <li> répercussion : le montant de l'engagment est ajusté automatiquement.
+                    Si le montant tombe à 0 l'engagement est supprimé </li>
+
+            </ul>
+    <li> A la proposition acceptée du fournisseur de livrer un article de remplacement d'un prix différent  </li>
+
+            <ul>
+            <li> modification du montant de la transaction du prix de l'article remplacé  </li>
+            <li> répercussion : le montant de l'engagment est ajusté automatiquement. </li>
+            </ul>
+    </ul>
+
+
+    </ul>
+</ul>
+
+<h5> Traitement d'un retour en magasin ou annulation partielle de livraison par le fournisseur (type Tricothe) avec bon d'achat </h5>
+<p> fait le choix de ne pas gérer les bons d'achat au niveau V1 de l'application </p>
+<ul>
+    <li> modification du montant de la transaction réduit de la valeur du bon d'achat.
+            Y compris du versement initial en cas d'attente livraison prépayée </li>
+    <li> modification de la ligne d'achat correspondante en cas de retour magasin </li>
+    <li> si la livraison était prépayée, suppression de l'engagment de montant 0 correspondant </li>
+
+</ul>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </body>
+
+</html>

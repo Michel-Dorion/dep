@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title> Suivi Dep </title>
+    </head>
+    <body>
+<h5> navigation </h5>
+<p> <a href='{% url "dep:txDetail_url" mouvmt_engage.tx_id.id %}'> Voir sa Transaction parent </a>
+                                                                 <!--#c l'id de l'objet que l'on veut -->
+    &emsp; <a href = '{% url "dep:txList_url" %}'> Retour liste des transactions </a></p>
+
+<h3> Mouvement engage {{ mouvmt_engage.id}} </h3>
+
+<p> Transaction :   {{ mouvmt_engage.tx_id}} </p>
+            <!-- c l'instance objet transaction que l'on recupere qui va afficher __str__ -->
+<p> Nature paiemt :   {{ mouvmt_engage.nature_paiemt}} </p>
+<p> Compte bancaire :   {{ mouvmt_engage.compte_bancaire}} </p>
+<p> Moyen paiemt :   {{ mouvmt_engage.moyen_paiemt}} </p>
+<p> Fin validité Moyen paiemt :   {{ mouvmt_engage.fin_validite_mp}} </p>
+<p> Periode :   {{ mouvmt_engage.periode}} </p>
+<p> Jour dans periode :   {{ mouvmt_engage.jour_ds_periode}} </p>
+<p> Mois ds periode :   {{ mouvmt_engage.mois_ds_periode}} </p>
+<p> Effectif ds n periode(s) :   {{ mouvmt_engage.effectif_ds_n_periode}} </p>
+<p> Renouvellement automatique :   {{ mouvmt_engage.renouv_auto}} </p>
+<p> Montant precedent :   {{ mouvmt_engage.montant_precedent}} </p>
+<p> Montant annonce :   {{ mouvmt_engage.montant_annonce}} </p>
+<p> Date derniere conversion : {{ mouvmt_engage.horodate_dern_conv}}</p>
+<p> ---- </p>
+
+<h5> actions pour le mouvement enage pour </h5>
+<p> <a href='{% url "dep:engaUpdate_url" mouvmt_engage.id %}'> le Modifier </a>
+    &emsp; <a href='{% url "dep:engaConv_url" mouvmt_engage.id %}'> le Convertir en mouvement courant </a></p>
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </body>
+</html>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title> Suivi Dep </title>
+    </head>
+    <body>
+<h5> navigation </h5>
+<p> <a href = '{% url "dep:mvmtList_url" %}'> Retour liste mouvements courants </a>
+
+<h3> Mouvement courant  {{ mouvmt_courant}} </h3>
+<p> Transaction :   {{ mouvmt_courant.tx_id}} </p>    <!--c l'instance objet transaction que l'on recupere qui va afficher __str__ -->
+<p> Nature paiemt :   {{ mouvmt_courant.nature_paiemt}} </p>
+<p> Compte bancaire :   {{ mouvmt_courant.compte_bancaire}} </p>
+<p> Moyen paiemt :   {{ mouvmt_courant.moyen_paiemt}} </p>
+<p> Date mouvmt :   {{ mouvmt_courant.date_mvmt}} </p>
+<p> Montant mouvmt :   {{ mouvmt_courant.montant_mvmt}} </p>
+<p> Rapprochmt bqe :   {{ mouvmt_courant.rapprochmt_bqe}} </p>
+<p> ---- </p>
+
+<h5> actions pour le Mouvement courant </h5>
+<p> <a href='{% url "dep:txDetail_url" mouvmt_courant.tx_id.id %}'> Voir la Transaction parente </a></p>
+<!--#c l'id de l'objet que l'on veut -->
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    </body>
+</html>
