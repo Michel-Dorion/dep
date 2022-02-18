@@ -11,6 +11,7 @@ from datetime import datetime, date
 #from dep.forms import FournRegTxForm, FournOcasTxForm #echec tentative DRY
 #from django.contrib import messages
 
+#import module_doc
 
 # Create your views here.
 class DepTemplateView(LoginRequiredMixin, generic.TemplateView):
@@ -44,6 +45,7 @@ class DepDocRembsmt(LoginRequiredMixin, generic.TemplateView):
 
 class DepDocModeles(LoginRequiredMixin, generic.TemplateView):
     template_name='dep/docModeles.html'
+
 
 class TxListView(LoginRequiredMixin, generic.ListView):
     model = Transaction
@@ -225,7 +227,7 @@ class TxEntry(LoginRequiredMixin, TxRepercut): # CreateWithInlinesView) :
 
 class RepercutMajTx:
 
-    def maj_montant(self, tx, nv_montant):
+    def maj_montant(self, tx, nv_montant, fourn_reg=None):
         if tx.nature_tx=='UNIT' :
             # maj du montant : répersussion mouvmt courant associé
             mvmtFille = Mouvmt_courant.objects.filter(tx_id=tx)[0] #tjrs un mouvmt créé auto
@@ -255,7 +257,7 @@ class RepercutMajTx:
             engaFille.save()
         return
 
-    def maj_versmt_initial(self, tx, nv_versmt_initial):
+    def maj_versmt_initial(self, tx, nv_versmt_initial, fourn_reg=None):
         #print('modif versmt initial!')
         #maj du mouvmt courant associé : c le 1° de la liste associe lors de la creation de la tx
             mvmtsFille = Mouvmt_courant.objects.filter(tx_id=tx)  # pas tjrs un mouvmt fille
@@ -276,10 +278,31 @@ class RepercutMajTx:
                 #c alors le 1° de la liste associe lors de la creation de la tx
             return
 
-    def maj_solo(self, tx, nv_solo):
+    def maj_solo(self, tx, nv_solo, fourn_reg=None):
+        print('bascule solo')
+        if nv_solo :
         # si tx devient mono catégorie, création d'une ligne d'achat
-        # si la tx concerne un fourn régulier, catégorisation habituelle
-        #sinon catégorisation par défaut
+            # si la tx concerne un fourn régulier, catégorisation habituelle
+            #sinon catégorisation par défaut
+            TxRepercut().repercut_achat_ligne(tx, fourn_reg)
+            """
+            if fourn_reg : #de catégorisation habituelle
+                intit = fourn_reg.intitule_hab
+                n_a= fourn_reg.nature_achat_hab
+                g_a = fourn_reg.groupe_achat_hab
+                c_a = fourn_reg.categorie_achat_hab
+                achat= Achat_ligne(tx_id=tx, montant=tx.montant_tx, intitule=intit,
+                        nature_achat=n_a, groupe_achat=g_a, categorie_achat=c_a)
+            else :
+                achat = Achat_ligne(tx_id=tx, montant=tx.montant_tx)
+            achat.save()
+            """
+        else : #pas mono catégorie, il faut supprimer la ligne d'achat créée automatiqment pour une tx déclarée mono par erreur
+            achats = Achat_ligne.objects.filter(tx_id=tx)
+            achats[0].delete()
+
+
+
         return
 
 
@@ -298,18 +321,20 @@ class TxUpdate(LoginRequiredMixin, generic.UpdateView):
     def form_valid(self, form):
     #repercussion de la màj d'un mouvmt courant;
         tx = get_object_or_404(Transaction, pk=self.kwargs['pk'])
+        # fournisseur régulier
+        fourn_reg = Fournisseur_regulier.objects.filter(nom_fourn=tx.fournisseur)
         # màj montant
         if tx.montant_tx!=form.instance.montant_tx :
-            RepercutMajTx().maj_montant(tx, form.instance.montant_tx)
+            RepercutMajTx().maj_montant(tx, form.instance.montant_tx, fourn_reg)
         # màj  versement initial
         if tx.versmt_initial!=form.instance.versmt_initial:
-            RepercutMajTx().maj_versmt_initial(tx, form.instance.versmt_initial)
+            RepercutMajTx().maj_versmt_initial(tx, form.instance.versmt_initial, fourn_reg)
         #màj indicateur mono catégorie
         if tx.solo_tx!=form.instance.solo_tx:
-            RepercutMajTx.maj_solo(tx, form.instance.solo_tx)
+            RepercutMajTx().maj_solo(tx, form.instance.solo_tx, fourn_reg)
         return super(TxUpdate, self).form_valid(form)
 
-    """
+    """objects.filter
         if tx.nature_tx=='UNIT' :
             # maj du montant : répersussion mouvmt courant associé
             mvmtFille = Mouvmt_courant.objects.filter(tx_id=tx)[0] #tjrs un mouvmt créé auto
