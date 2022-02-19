@@ -11,7 +11,7 @@ from datetime import datetime, date
 #from dep.forms import FournRegTxForm, FournOcasTxForm #echec tentative DRY
 #from django.contrib import messages
 
-#import module_doc
+from dep.module_doc import * #classes de la documentation
 
 # Create your views here.
 class DepTemplateView(LoginRequiredMixin, generic.TemplateView):
@@ -21,31 +21,6 @@ class DepTemplateView(LoginRequiredMixin, generic.TemplateView):
         context = super(DepTemplateView, self).get_context_data(**kwargs)
         context['msg'] = self.msg
         return context
-
-class DepDocTemplateView(LoginRequiredMixin, generic.TemplateView):
-    template_name='dep/depDoc.html'
-
-class  DepDocPresgen(LoginRequiredMixin, generic.TemplateView):
-    template_name='dep/docPresgen.html'
-
-class DepDocTxFournOccas(LoginRequiredMixin, generic.TemplateView):
-    template_name='dep/docTxFournOccas.html'
-
-class DepDocTxFournReg(LoginRequiredMixin, generic.TemplateView):
-    template_name='dep/docTxFournReg.html'
-
-class DepDocModifTx(LoginRequiredMixin, generic.TemplateView):
-    template_name='dep/docModifTx.html'
-
-class DepDocCasdusage(LoginRequiredMixin, generic.TemplateView):
-    template_name='dep/docCasdusage.html'
-
-class DepDocRembsmt(LoginRequiredMixin, generic.TemplateView):
-    template_name='dep/docRembsmt.html'
-
-class DepDocModeles(LoginRequiredMixin, generic.TemplateView):
-    template_name='dep/docModeles.html'
-
 
 class TxListView(LoginRequiredMixin, generic.ListView):
     model = Transaction
@@ -334,61 +309,7 @@ class TxUpdate(LoginRequiredMixin, generic.UpdateView):
             RepercutMajTx().maj_solo(tx, form.instance.solo_tx, fourn_reg)
         return super(TxUpdate, self).form_valid(form)
 
-    """objects.filter
-        if tx.nature_tx=='UNIT' :
-            # maj du montant : répersussion mouvmt courant associé
-            mvmtFille = Mouvmt_courant.objects.filter(tx_id=tx)[0] #tjrs un mouvmt créé auto
-            mvmtFille.montant_mvmt = form.instance.montant_tx
-            mvmtFille.save()
-            if tx.solo_tx: #répercussion sur la ligne achat
-                achatFille = Achat_ligne.objects.filter(tx_id=tx)[0]
-                achatFille.montant = form.instance.montant_tx
-                achatFille.save()
 
-        if tx.nature_tx=='LIV' :
-            # si nv montant_tx, maj de l'engagmt associé par delta
-            if form.instance.montant_tx != tx.montant_tx :
-                #print('modif montant')
-                engaFille = Mouvmt_engage.objects.filter(tx_id=tx)[0]
-                engaFille.montant_annonce -= tx.montant_tx - form.instance.montant_tx
-                #si il reste a livrer
-                if engaFille.montant_annonce >0: engaFille.save()
-                #supp engagmt si tout livre
-                else: engaFille.delete()
-
-            # si rectification du versement initial, maj du mouvmt courant associé :
-                #c alors le 1° de la liste associe lors de la creation de la tx
-            mvmtFille = Mouvmt_courant.objects.filter(tx_id=tx) # pas tjrs un mouvmt fille
-            if mvmtFille and form.instance.versmt_initial != tx.versmt_initial :
-                #print('modif versmt initial')
-                mvmtFille[0].montant_mvmt = form.instance.versmt_initial
-                mvmtFille.save()
-        #tx ABMT
-        if tx.nature_tx=='ABMT':
-            # si nv montant_tx, maj de l'engagmt associé au niveau de l'annonce avec mémoire du montant précédent
-            if tx.montant_tx !=form.instance.montant_tx:
-                engaFille = Mouvmt_engage.objects.filter(tx_id=tx)[0]
-                engaFille.montant_precedent = engaFille.montant_annonce
-                engaFille.montant_annonce = form.instance.montant_tx
-                engaFille.save()
-            # si rectification du versement initial, maj du mouvmt courant associé : c le 1° de la liste associe lors de la creation de la tx
-            if tx.versmt_initial!=form.instance.versmt_initial:
-                #print('modif versmt initial!')
-                mvmtsFille = Mouvmt_courant.objects.filter(tx_id=tx)
-                if mvmtsFille :
-                    #si rectif du montant du versmt initial
-                    if form.instance.versmt_initial >0:
-                        mvmtsFille[0].montant_mvmt = form.instance.versmt_initial
-                        mvmtsFille[0].save()
-                    #si plus de versement initial
-                    elif form.instance.versmt_initial==0 :
-                        mvmtsFille[0].delete()
-                # et s'il n'y en avait pas (versmt initial 0), creation
-                else:
-                    if form.instance.versmt_initial >0:
-                        mvmtFille = Mouvmt_courant(tx_id = tx, montant_mvmt= tx.versmt_initial)
-                        mvmtFille.save()
-    """
 
 
 
@@ -447,9 +368,10 @@ class MvmtListView(LoginRequiredMixin, generic.ListView):
         return qs.order_by('-date_mvmt')
 
 
+
 class MvmtUpdate(LoginRequiredMixin, generic.UpdateView):
     model = Mouvmt_courant
-    fields = ['tx_id', 'nature_paiemt', 'compte_bancaire', 'moyen_paiemt', 'montant_mvmt']
+    fields = ['date_mvmt','montant_mvmt', 'nature_paiemt', 'compte_bancaire', 'moyen_paiemt']
     template_name = 'dep/modif_mvmt.html'
     def get_context_data(self, **kwargs):
         context = super(MvmtUpdate, self).get_context_data(**kwargs)
@@ -457,6 +379,7 @@ class MvmtUpdate(LoginRequiredMixin, generic.UpdateView):
         return context
     def get_success_url(self, **kwargs):
         return reverse_lazy('dep:txMvmts_url', kwargs={'pk': self.kwargs['tx']})
+
 
 class MvmtDetail(LoginRequiredMixin, generic.DetailView) :
     model = Mouvmt_courant
@@ -493,16 +416,6 @@ class MvmtEntry(LoginRequiredMixin, generic.CreateView) :
 
         return super(MvmtEntry, self).form_valid(form)
 
-class MvmtUpdate(LoginRequiredMixin, generic.UpdateView):
-    model = Mouvmt_courant
-    fields = ['date_mvmt','montant_mvmt', 'nature_paiemt', 'compte_bancaire', 'moyen_paiemt']
-    template_name = 'dep/modif_mvmt.html'
-    def get_context_data(self, **kwargs):
-        context = super(MvmtUpdate, self).get_context_data(**kwargs)
-        context['tx_id'] = get_object_or_404(Transaction, pk=self.kwargs['tx'])
-        return context
-    def get_success_url(self, **kwargs):
-        return reverse_lazy('dep:txMvmts_url', kwargs={'pk': self.kwargs['tx']})
 
 
 class MvmtSoldLiv(LoginRequiredMixin, View):
