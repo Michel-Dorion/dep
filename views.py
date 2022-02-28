@@ -148,8 +148,8 @@ class TxRepercut(generic.CreateView):
 class TxFournEntry(LoginRequiredMixin, TxRepercut):
     # pour un fournisseur régulier
     #model = Transaction    # transaction is the default context name use in the template
-    fields = ['date_tx', 'montant_tx',   #'intitule_tx', 'solo_tx', 'nature_tx', 'renouv_auto_tx',  'mode_reglmnt', 'nb_etalmt',
-                 'versmt_initial'] #apparaîtront à l'écran de saisie
+    fields = ['date_tx', 'montant_tx',   #'intitule_tx', 'solo_tx', 'nature_tx',  'mode_reglmnt', 'nb_etalmt',
+                 'versmt_initial', 'renouv_auto_tx'] #apparaîtront à l'écran de saisie
     def get_context_data(self, **kwargs):
         context = super(TxFournEntry, self).get_context_data(**kwargs)
         context['titre'] = 'pour le fournisseur regulier '
@@ -254,7 +254,7 @@ class RepercutMajTx:
             return
 
     def maj_solo(self, tx, nv_solo, fourn_reg=None):
-        print('bascule solo')
+        #print('bascule solo')
         if nv_solo :
         # si tx devient mono catégorie, création d'une ligne d'achat
             # si la tx concerne un fourn régulier, catégorisation habituelle
@@ -276,7 +276,15 @@ class RepercutMajTx:
             achats = Achat_ligne.objects.filter(tx_id=tx)
             achats[0].delete()
 
-
+    def maj_renouv(self, tx, nv_renouv, fourn_reg=None):
+        print ('ds maj_renouv', tx, nv_renouv, fourn_reg)
+        # et seulement pour les tx ABMT qui doivent avoir un fourn_reg          
+        if (tx.nature_tx == 'ABMT') and fourn_reg :
+            # il faut màj l'engagmt associé
+            engasFille = Mouvmt_engage.objects.filter(tx_id=tx)
+            if engasFille :
+                engasFille[0].renouv_auto = nv_renouv
+                engasFille[0].save()
 
         return
 
@@ -307,6 +315,9 @@ class TxUpdate(LoginRequiredMixin, generic.UpdateView):
         #màj indicateur mono catégorie
         if tx.solo_tx!=form.instance.solo_tx:
             RepercutMajTx().maj_solo(tx, form.instance.solo_tx, fourn_reg)
+        if tx.renouv_auto_tx!=form.instance.renouv_auto_tx :
+            print(tx)
+            RepercutMajTx().maj_renouv(tx, form.instance.renouv_auto_tx , fourn_reg) 
         return super(TxUpdate, self).form_valid(form)
 
 
