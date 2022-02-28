@@ -277,7 +277,7 @@ class RepercutMajTx:
             achats[0].delete()
 
     def maj_renouv(self, tx, nv_renouv, fourn_reg=None):
-        print ('ds maj_renouv', tx, nv_renouv, fourn_reg)
+        #print ('ds maj_renouv', tx, nv_renouv, fourn_reg)
         # et seulement pour les tx ABMT qui doivent avoir un fourn_reg          
         if (tx.nature_tx == 'ABMT') and fourn_reg :
             # il faut màj l'engagmt associé

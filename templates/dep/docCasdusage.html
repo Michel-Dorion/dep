@@ -14,8 +14,29 @@
 <p> ---- </p>
 <p> Version 1 de l'application </p>
 <h3> Cas d'usage  </h3>
+<h5> Traitement d'un abnmt renouvelable automatiquement (type WSJ) </h5>
+<p> avons fait le choix d'éviter une tx à chaque période d'usage
+    et de créer une tx abnmt avec renouvellement automatique </p>
+<ul> <li> La saisie de la tx abonnement n'a lieu que pour un fournisseur régulier </li>
+        <ul>
+         <li> Celui-ci doit donc avoir été préalablement défini </li>
+        </ul>
+        <ul>
+            <li> Saisie avec montant et versement initial si frais de souscription</li>
+            <li> Bien Indiquer renouvellement automatique</li>
+            <li> Répercussion : création automatique d'un engagement associé à la transaction d'abonnement
+            </li>
+        </ul>
+
+    <li> A chaque nouvelle période, l'engagement génère :  </li>
+    <ul><li> un mouvement courant associé à la transaction d'abonnement pour rapprochement bancaire
+        </li>
+        <li> une ligne article associé à la transaction d'abonnement pour comptabilité</li>
+            
+    </ul>
+</ul>
 <h5> Traitement d'un abnmt épisodique (type Bip & Go) </h5>
-<p> fait le choix d'éviter une tx à chaque période d'usage
+<p> avons fait le choix d'éviter une tx à chaque période d'usage
     et de créer une tx abnmt sans renouvellement automatique avec un montant initial 0. </p>
 <ul><li> A chaque notification d'une facture par le fournisseur :  </li>
     <ul><li> modification du montant de la tx </li>

@@ -58,9 +58,11 @@ class SelectionCategorieAchat(): #accompagne les lignes d'achat
     FOURNITURE = 'F'
     ENERGIE = 'E'
     SERVICE = 'S'
+    OEUVRE = 'O'
     DURABLE = 'D'
     def chx_nature_achat(self):
-        return [(self.FOURNITURE, 'Consommable'), (self.SERVICE, 'Service'), (self.DURABLE, 'Bien Durable'), (self.ENERGIE, 'Energie')]
+        return [(self.FOURNITURE, 'Consommable'), (self.SERVICE, 'Service'), (self.OEUVRE, 'Oeuvre'), 
+            (self.DURABLE, 'Bien Durable'), (self.ENERGIE, 'Energie')]
 # groupes d'achat
     FNMT ='FNMT'
     GEST ='GEST'
